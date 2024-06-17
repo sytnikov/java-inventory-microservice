@@ -28,7 +28,7 @@ This assignment involves building a Spring Boot application for a inventory mana
 - Implement error handling and validation for API requests.
 - Consider logging and monitoring functionalities for production environments.
 
-**Additional Functionalities (Optional):**
+**Additional Functionalities:**
 - **Low Stock Alerts:**
     - Implement logic to track stock levels and trigger notifications (e.g., email, SMS) when stock falls below a predefined threshold.
 - **Order Status Update:**
