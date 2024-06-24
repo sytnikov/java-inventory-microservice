@@ -16,8 +16,8 @@ public class SupplierRepo implements ISupplierRepo {
     private ISupplierJpaRepo _supplierRepo;
 
     @Override
-    public Supplier createOne(Supplier supplier) {
-        return _supplierRepo.save(supplier);
+    public Supplier createOne(Supplier newSupplier) {
+        return _supplierRepo.save(newSupplier);
     }
 
     @Override
@@ -31,8 +31,8 @@ public class SupplierRepo implements ISupplierRepo {
     }
 
     @Override
-    public Supplier updateOne(Supplier supplier) {
-        return _supplierRepo.save(supplier);
+    public Supplier updateOne(Supplier updatedSupplier) {
+        return _supplierRepo.save(updatedSupplier);
     }
 
     @Override

@@ -19,8 +19,8 @@ public class SupplierController {
     private ISupplierService _supplierService;
 
     @PostMapping
-    public ResponseEntity<Supplier> createSupplier(@RequestBody Supplier supplier) {
-        Supplier createdSupplier = _supplierService.createSupplier(supplier);
+    public ResponseEntity<Supplier> addSupplier(@RequestBody Supplier supplierDetails) {
+        Supplier createdSupplier = _supplierService.addSupplier(supplierDetails);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdSupplier);
     }
 
@@ -30,18 +30,27 @@ public class SupplierController {
         return ResponseEntity.ok(suppliers);
     }
 
-    @GetMapping
-    public Optional<Supplier> getSupplierById(UUID supplierId) {
-        return _supplierService.getSupplierById(supplierId);
+    @GetMapping("/{supplierId}")
+    public ResponseEntity<Optional<Supplier>> getSupplierById(@PathVariable UUID supplierId) {
+        Optional<Supplier> foundSupplier = _supplierService.getSupplierById(supplierId);
+        return ResponseEntity.ok(foundSupplier);
     }
 
-    @PutMapping
-    public Supplier updateSupplier(@RequestBody Supplier supplier) {
-        return _supplierService.updateSupplier(supplier);
+    @PutMapping("/{supplierId}")
+    public ResponseEntity<Supplier> modifySupplier(@PathVariable UUID supplierId, @RequestBody Supplier supplierDetails) {
+        Optional<Supplier> existingSupplier = _supplierService.getSupplierById(supplierId);
+
+        if (existingSupplier.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        supplierDetails.setId(supplierId);
+        Supplier updatedSupplier = _supplierService.modifySupplier(supplierDetails);
+        return ResponseEntity.ok(updatedSupplier);
     }
 
-    @DeleteMapping
-    public boolean deleteSupplier(UUID supplierId) {
+    @DeleteMapping("/{supplierId}")
+    public ResponseEntity<Void> deleteSupplier(@PathVariable UUID supplierId) {
         _supplierService.deleteSupplier(supplierId);
+        return ResponseEntity.noContent().build();
     }
 }
