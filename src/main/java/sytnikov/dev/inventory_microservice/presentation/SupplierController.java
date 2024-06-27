@@ -1,4 +1,4 @@
-package sytnikov.dev.inventory_microservice.presentation.supplier;
+package sytnikov.dev.inventory_microservice.presentation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

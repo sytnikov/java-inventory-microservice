@@ -1,17 +1,14 @@
 package sytnikov.dev.inventory_microservice.domain.order;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
 @Table(name = "\"order\"")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
@@ -25,7 +22,7 @@ public class Order {
     private UUID supplier_id;
 
     @Column(nullable = false)
-    private float total_amount;
+    private BigDecimal total_amount;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

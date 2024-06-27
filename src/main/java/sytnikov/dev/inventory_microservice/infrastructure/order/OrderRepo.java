@@ -6,6 +6,7 @@ import sytnikov.dev.inventory_microservice.domain.order.IOrderRepo;
 import sytnikov.dev.inventory_microservice.domain.order.Order;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -26,13 +27,17 @@ public class OrderRepo implements IOrderRepo {
     }
 
     @Override
+    public Optional<Order> getOneById(UUID orderId) {
+        return _orderRepo.findById(orderId);
+    }
+
+    @Override
     public Order updateOne(Order order) {
         return _orderRepo.save(order);
     }
 
     @Override
-    public boolean deleteOne(UUID order_id) {
+    public void deleteOne(UUID order_id) {
         _orderRepo.deleteById(order_id);
-        return true;
     }
 }
