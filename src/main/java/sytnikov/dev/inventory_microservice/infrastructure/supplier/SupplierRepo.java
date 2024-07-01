@@ -13,30 +13,30 @@ import java.util.UUID;
 public class SupplierRepo implements ISupplierRepo {
 
     @Autowired
-    private ISupplierJpaRepo _supplierRepo;
+    private ISupplierJpaRepo _supplierJpaRepo;
 
     @Override
     public Supplier createOne(Supplier newSupplier) {
-        return _supplierRepo.save(newSupplier);
+        return _supplierJpaRepo.save(newSupplier);
     }
 
     @Override
     public List<Supplier> getAll() {
-        return _supplierRepo.findAll();
+        return _supplierJpaRepo.findAll();
     }
 
     @Override
     public Optional<Supplier> getOneById(UUID supplierId) {
-        return _supplierRepo.findById(supplierId);
+        return _supplierJpaRepo.findById(supplierId);
     }
 
     @Override
     public Supplier updateOne(Supplier updatedSupplier) {
-        return _supplierRepo.save(updatedSupplier);
+        return _supplierJpaRepo.save(updatedSupplier);
     }
 
     @Override
     public void deleteOne(UUID supplierId) {
-        _supplierRepo.deleteById(supplierId);
+        _supplierJpaRepo.deleteById(supplierId);
     }
 }

@@ -15,46 +15,45 @@ import java.util.UUID;
 @RequestMapping("api/v1/orders")
 public class OrderController {
 
+    @Autowired
+    private IOrderService _orderService;
 
-        @Autowired
-        private IOrderService _orderService;
-
-        @PostMapping
-        public ResponseEntity<Order> addOrder(@RequestBody Order orderDetails) {
-            Order createdOrder = _orderService.addOrder(orderDetails);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
-        }
-
-        @GetMapping
-        public ResponseEntity<List<Order>> getAllOrders() {
-            List<Order> orders = _orderService.getAllOrders();
-            return ResponseEntity.ok(orders);
-        }
-
-        @GetMapping("/{orderId}")
-        public ResponseEntity<Optional<Order>> getOrderById(@PathVariable UUID orderId) {
-            Optional<Order> foundOrder = _orderService.getOrderById(orderId);
-            return ResponseEntity.ok(foundOrder);
-        }
-
-        @PutMapping("/{orderId}")
-        public ResponseEntity<Order> modifyOrder(@PathVariable UUID orderId, @RequestBody Order orderDetails) {
-            Optional<Order> existingOrder = _orderService.getOrderById(orderId);
-
-            if (existingOrder.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-            orderDetails.setId(orderId);
-            Order updatedOrder = _orderService.modifyOrder(orderDetails);
-            return ResponseEntity.ok(updatedOrder);
-        }
-
-        @DeleteMapping("/{orderId}")
-        public ResponseEntity<Void> deleteOrder(@PathVariable UUID orderId) {
-            _orderService.deleteOrder(orderId);
-            return ResponseEntity.noContent().build();
-        }
+    @PostMapping
+    public ResponseEntity<Order> addOrder(@RequestBody Order orderDetails) {
+        Order createdOrder = _orderService.addOrder(orderDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
+
+    @GetMapping
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = _orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Optional<Order>> getOrderById(@PathVariable UUID orderId) {
+        Optional<Order> foundOrder = _orderService.getOrderById(orderId);
+        return ResponseEntity.ok(foundOrder);
+    }
+
+    @PutMapping("/{orderId}")
+    public ResponseEntity<Order> modifyOrder(@PathVariable UUID orderId, @RequestBody Order orderDetails) {
+        Optional<Order> existingOrder = _orderService.getOrderById(orderId);
+
+        if (existingOrder.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        orderDetails.setId(orderId);
+        Order updatedOrder = _orderService.modifyOrder(orderDetails);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable UUID orderId) {
+        _orderService.deleteOrder(orderId);
+        return ResponseEntity.noContent().build();
+    }
+}
 
 
 

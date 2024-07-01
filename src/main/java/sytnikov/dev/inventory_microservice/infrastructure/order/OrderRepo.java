@@ -13,31 +13,31 @@ import java.util.UUID;
 public class OrderRepo implements IOrderRepo {
 
     @Autowired
-    private IOrderJpaRepo _orderRepo;
+    private IOrderJpaRepo _orderJpaRepo;
 
 
     @Override
     public Order createOne(Order order) {
-        return _orderRepo.save(order);
+        return _orderJpaRepo.save(order);
     }
 
     @Override
     public List<Order> getAll() {
-        return _orderRepo.findAll();
+        return _orderJpaRepo.findAll();
     }
 
     @Override
     public Optional<Order> getOneById(UUID orderId) {
-        return _orderRepo.findById(orderId);
+        return _orderJpaRepo.findById(orderId);
     }
 
     @Override
     public Order updateOne(Order order) {
-        return _orderRepo.save(order);
+        return _orderJpaRepo.save(order);
     }
 
     @Override
     public void deleteOne(UUID order_id) {
-        _orderRepo.deleteById(order_id);
+        _orderJpaRepo.deleteById(order_id);
     }
 }
