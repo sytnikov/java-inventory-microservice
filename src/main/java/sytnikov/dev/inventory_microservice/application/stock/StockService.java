@@ -1,10 +1,14 @@
 package sytnikov.dev.inventory_microservice.application.stock;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sytnikov.dev.inventory_microservice.domain.stock.IStockRepo;
 import sytnikov.dev.inventory_microservice.domain.stock.Stock;
+import sytnikov.dev.inventory_microservice.domain.supplier.ISupplierRepo;
+import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,9 +18,14 @@ public class StockService implements IStockService{
 
     @Autowired
     private IStockRepo _stockRepo;
+    @Autowired
+    private ISupplierRepo _supplierRepo;
 
     @Override
-    public Stock addStock(Stock stock) {
+    public Stock addStock(UUID supplierId, UUID productId, String productBarcode, int quantity) throws EntityNotFoundException {
+        Supplier foundSupplier = _supplierRepo.getOneById(supplierId)
+                .orElseThrow(() -> new EntityNotFoundException("Supplier not found with this id: " + supplierId));
+        Stock stock = new Stock(UUID.randomUUID(), productId, productBarcode, quantity, foundSupplier, new ArrayList<>());
         return _stockRepo.createOne(stock);
     }
 

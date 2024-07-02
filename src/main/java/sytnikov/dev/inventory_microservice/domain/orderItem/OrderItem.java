@@ -2,6 +2,8 @@ package sytnikov.dev.inventory_microservice.domain.orderItem;
 
 import jakarta.persistence.*;
 import lombok.*;
+import sytnikov.dev.inventory_microservice.domain.order.Order;
+import sytnikov.dev.inventory_microservice.domain.stock.Stock;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -17,15 +19,17 @@ public class OrderItem {
     @Column(nullable = false)
     private UUID id;
 
-    @Column(nullable = false)
-    private UUID order_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
-    @Column(nullable = false)
-    private UUID stock_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stock_id", nullable = false)
+    private Stock stock;
 
     @Column(nullable = false)
     private int quantity;
 
     @Column(nullable = false)
-    private BigDecimal unit_price;
+    private BigDecimal unitPrice;
 }

@@ -27,8 +27,10 @@ public class SupplierService implements ISupplierService{
     }
 
     @Override
-    public Optional<Supplier> getSupplierById(UUID supplierId) {
-        return _supplierRepo.getOneById(supplierId);
+    public Optional<Supplier> getSupplierById(UUID supplierId) throws EntityNotFoundException {
+        Supplier foundSupplier = _supplierRepo.getOneById(supplierId)
+                .orElseThrow(() -> new EntityNotFoundException("Supplier not found with id " + supplierId));
+        return Optional.ofNullable(foundSupplier);
     }
 
     @Override

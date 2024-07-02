@@ -20,7 +20,7 @@ public class Supplier {
     private String name;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(100)")
-    private String contact_person;
+    private String contactPerson;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(100)")
     private String email;

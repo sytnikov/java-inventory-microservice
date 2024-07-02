@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sytnikov.dev.inventory_microservice.application.stock.IStockService;
 import sytnikov.dev.inventory_microservice.domain.stock.Stock;
+import sytnikov.dev.inventory_microservice.dtos.stock.StockCreateDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +20,13 @@ public class StockController {
     private IStockService _stockService;
     
     @PostMapping
-    public ResponseEntity<Stock> addStock(@RequestBody Stock stockDetails) {
-        Stock createdStock = _stockService.addStock(stockDetails);
+    public ResponseEntity<Stock> addStock(@RequestBody StockCreateDto stockDetails) {
+        System.out.println(stockDetails.getQuantity());
+        Stock createdStock = _stockService.addStock(
+                stockDetails.getSupplierId(),
+                stockDetails.getProductId(),
+                stockDetails.getProductBarcode(),
+                stockDetails.getQuantity());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
     }
 

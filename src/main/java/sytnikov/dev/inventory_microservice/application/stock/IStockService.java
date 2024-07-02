@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Service
 public interface IStockService {
-    public Stock addStock(Stock stock);
+    public Stock addStock(UUID supplierId, UUID productId, String productBarcode, int quantity);
     public List<Stock> getAllStocks();
     public Optional<Stock> getStockById(UUID stockId);
     public Stock modifyStock(Stock stock);
