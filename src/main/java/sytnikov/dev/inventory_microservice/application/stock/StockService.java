@@ -41,6 +41,8 @@ public class StockService implements IStockService{
 
     @Override
     public Stock modifyStock(Stock stock) {
+        Stock foundStock = _stockRepo.getOneById(stock.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Stock not found with this id: " + stock.getId()));
         return _stockRepo.updateOne(stock);
     }
 

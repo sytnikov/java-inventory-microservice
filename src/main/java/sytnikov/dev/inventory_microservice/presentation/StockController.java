@@ -49,6 +49,7 @@ public class StockController {
         if (existingStock.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
         stockDetails.setId(stockId);
         Stock updatedStock = _stockService.modifyStock(stockDetails);
         return ResponseEntity.ok(updatedStock);
