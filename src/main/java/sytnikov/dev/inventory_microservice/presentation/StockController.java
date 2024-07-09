@@ -1,11 +1,14 @@
 package sytnikov.dev.inventory_microservice.presentation;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sytnikov.dev.inventory_microservice.application.stock.IStockService;
+import sytnikov.dev.inventory_microservice.application.supplier.ISupplierService;
 import sytnikov.dev.inventory_microservice.domain.stock.Stock;
+import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 import sytnikov.dev.inventory_microservice.dtos.stock.StockCreateDto;
 
 import java.util.List;
@@ -18,12 +21,17 @@ public class StockController {
     
     @Autowired
     private IStockService _stockService;
+
+    @Autowired
+    private ISupplierService _supplierService;
     
     @PostMapping
     public ResponseEntity<Stock> addStock(@RequestBody StockCreateDto stockDetails) {
-        System.out.println(stockDetails.getQuantity());
+        UUID supplierId = stockDetails.getSupplierId();
+        Supplier foundSupplier = _supplierService.getSupplierById(supplierId)
+                .orElseThrow(() -> new EntityNotFoundException("Supplier not found with this id: " + supplierId));
         Stock createdStock = _stockService.addStock(
-                stockDetails.getSupplierId(),
+                foundSupplier,
                 stockDetails.getProductId(),
                 stockDetails.getProductBarcode(),
                 stockDetails.getQuantity());
@@ -37,19 +45,16 @@ public class StockController {
     }
 
     @GetMapping("/{stockId}")
-    public ResponseEntity<Optional<Stock>> getStockById(@PathVariable UUID stockId) {
-        Optional<Stock> foundStock = _stockService.getStockById(stockId);
+    public ResponseEntity<Stock> getStockById(@PathVariable UUID stockId) {
+        Stock foundStock = _stockService.getStockById(stockId)
+                .orElseThrow(() -> new EntityNotFoundException("Stock with id " + stockId + " not found"));
         return ResponseEntity.ok(foundStock);
     }
 
     @PutMapping("/{stockId}")
     public ResponseEntity<Stock> modifyStock(@PathVariable UUID stockId, @RequestBody Stock stockDetails) {
-        Optional<Stock> existingStock = _stockService.getStockById(stockId);
-
-        if (existingStock.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
+        _stockService.getStockById(stockId)
+                .orElseThrow(() -> new EntityNotFoundException("Stock cannot be updated as it was not found"));
         stockDetails.setId(stockId);
         Stock updatedStock = _stockService.modifyStock(stockDetails);
         return ResponseEntity.ok(updatedStock);

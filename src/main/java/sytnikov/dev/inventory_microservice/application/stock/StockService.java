@@ -22,10 +22,8 @@ public class StockService implements IStockService{
     private ISupplierRepo _supplierRepo;
 
     @Override
-    public Stock addStock(UUID supplierId, UUID productId, String productBarcode, int quantity) throws EntityNotFoundException {
-        Supplier foundSupplier = _supplierRepo.getOneById(supplierId)
-                .orElseThrow(() -> new EntityNotFoundException("Supplier not found with this id: " + supplierId));
-        Stock stock = new Stock(UUID.randomUUID(), productId, productBarcode, quantity, foundSupplier, new ArrayList<>());
+    public Stock addStock(Supplier supplier, UUID productId, String productBarcode, int quantity) throws EntityNotFoundException {
+        Stock stock = new Stock(UUID.randomUUID(), productId, productBarcode, quantity, supplier, new ArrayList<>());
         return _stockRepo.createOne(stock);
     }
 
@@ -41,8 +39,6 @@ public class StockService implements IStockService{
 
     @Override
     public Stock modifyStock(Stock stock) {
-        Stock foundStock = _stockRepo.getOneById(stock.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Stock not found with this id: " + stock.getId()));
         return _stockRepo.updateOne(stock);
     }
 
