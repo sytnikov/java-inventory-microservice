@@ -46,4 +46,14 @@ public class StockService implements IStockService{
     public void deleteStock(UUID stockId) {
         _stockRepo.deleteOne(stockId);
     }
+
+    @Override
+    public List<Stock> getStocksByProductId(String productBarcode) {
+        return _stockRepo.getAllByProductId(productBarcode);
+    }
+
+    @Override
+    public List<Stock> getStocksBySupplierId(UUID supplierId) {
+        return _stockRepo.getAllBySupplierId(supplierId);
+    }
 }

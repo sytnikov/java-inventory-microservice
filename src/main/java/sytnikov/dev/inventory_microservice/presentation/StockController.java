@@ -51,6 +51,18 @@ public class StockController {
         return ResponseEntity.ok(foundStock);
     }
 
+    @GetMapping("/product/{productBarcode}")
+    public ResponseEntity<List<Stock>> getStocksByProductId(@PathVariable String productBarcode) {
+        List<Stock> stocksByProducts = _stockService.getStocksByProductId(productBarcode);
+        return ResponseEntity.ok(stocksByProducts);
+    }
+
+    @GetMapping("/supplier/{supplierId}")
+    public ResponseEntity<List<Stock>> getStocksBySupplierId(@PathVariable UUID supplierId) {
+        List<Stock> stocksBySupplier = _stockService.getStocksBySupplierId(supplierId);
+        return ResponseEntity.ok(stocksBySupplier);
+    }
+
     @PutMapping("/{stockId}")
     public ResponseEntity<Stock> modifyStock(@PathVariable UUID stockId, @RequestBody Stock stockDetails) {
         _stockService.getStockById(stockId)

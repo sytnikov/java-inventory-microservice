@@ -10,4 +10,6 @@ public interface IStockRepo {
     public Optional<Stock> getOneById(UUID stockId);
     public Stock updateOne(Stock stock);
     public void deleteOne(UUID stockId);
+    public List<Stock> getAllByProductId(String productBarcode);
+    public List<Stock> getAllBySupplierId(UUID supplierId);
 }

@@ -40,4 +40,14 @@ public class StockRepo implements IStockRepo {
     public void deleteOne(UUID stockId) {
         _stockJpaRepo.deleteById(stockId);
     }
+
+    @Override
+    public List<Stock> getAllByProductId(String productBarcode) {
+        return _stockJpaRepo.findStocksByProductBarcode(productBarcode);
+    }
+
+    @Override
+    public List<Stock> getAllBySupplierId(UUID supplierId) {
+        return _stockJpaRepo.findStocksBySupplierId(supplierId);
+    }
 }
