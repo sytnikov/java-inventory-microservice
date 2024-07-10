@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import sytnikov.dev.inventory_microservice.application.stock.IStockService;
 import sytnikov.dev.inventory_microservice.application.supplier.ISupplierService;
 import sytnikov.dev.inventory_microservice.domain.stock.Stock;
+import sytnikov.dev.inventory_microservice.domain.stock.StockLevelEnum;
 import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 import sytnikov.dev.inventory_microservice.dtos.stock.StockCreateDto;
 
@@ -32,7 +33,6 @@ public class StockController {
                 .orElseThrow(() -> new EntityNotFoundException("Supplier not found with this id: " + supplierId));
         Stock createdStock = _stockService.addStock(
                 foundSupplier,
-                stockDetails.getProductId(),
                 stockDetails.getProductBarcode(),
                 stockDetails.getQuantity());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStock);
@@ -61,6 +61,12 @@ public class StockController {
     public ResponseEntity<List<Stock>> getStocksBySupplierId(@PathVariable UUID supplierId) {
         List<Stock> stocksBySupplier = _stockService.getStocksBySupplierId(supplierId);
         return ResponseEntity.ok(stocksBySupplier);
+    }
+
+    @GetMapping("/level/{productBarcode}")
+    public ResponseEntity<StockLevelEnum> isStockAvailable(@PathVariable String productBarcode) {
+        StockLevelEnum stockLevel = _stockService.getStockLevel(productBarcode);
+        return ResponseEntity.ok(stockLevel);
     }
 
     @PutMapping("/{stockId}")

@@ -19,9 +19,6 @@ public class Stock {
     @Column(nullable = false)
     private UUID id;
 
-    @Column(nullable = false)
-    private UUID productId;
-
     @Column(nullable = false, columnDefinition = "VARCHAR(100)", unique = true)
     private String productBarcode;
 

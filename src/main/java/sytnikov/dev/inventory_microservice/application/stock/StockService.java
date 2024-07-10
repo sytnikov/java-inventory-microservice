@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sytnikov.dev.inventory_microservice.domain.stock.IStockRepo;
 import sytnikov.dev.inventory_microservice.domain.stock.Stock;
+import sytnikov.dev.inventory_microservice.domain.stock.StockLevelEnum;
 import sytnikov.dev.inventory_microservice.domain.supplier.ISupplierRepo;
 import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
@@ -15,6 +16,8 @@ import java.util.UUID;
 
 @Service
 public class StockService implements IStockService{
+    private static final int LOW_STOCK_THRESHOLD = 10;
+    private static final int OUT_OF_STOCK_THRESHOLD = 0;
 
     @Autowired
     private IStockRepo _stockRepo;
@@ -22,8 +25,8 @@ public class StockService implements IStockService{
     private ISupplierRepo _supplierRepo;
 
     @Override
-    public Stock addStock(Supplier supplier, UUID productId, String productBarcode, int quantity) throws EntityNotFoundException {
-        Stock stock = new Stock(UUID.randomUUID(), productId, productBarcode, quantity, supplier, new ArrayList<>());
+    public Stock addStock(Supplier supplier, String productBarcode, int quantity) {
+        Stock stock = new Stock(UUID.randomUUID(), productBarcode, quantity, supplier, new ArrayList<>());
         return _stockRepo.createOne(stock);
     }
 
@@ -55,5 +58,23 @@ public class StockService implements IStockService{
     @Override
     public List<Stock> getStocksBySupplierId(UUID supplierId) {
         return _stockRepo.getAllBySupplierId(supplierId);
+    }
+
+    @Override
+    public StockLevelEnum getStockLevel(String productBarcode) {
+        List<Stock> foundStocks = _stockRepo.getAllByProductId(productBarcode);
+        int totalAmount = foundStocks.stream().mapToInt(Stock::getQuantity).sum();
+        if (totalAmount == OUT_OF_STOCK_THRESHOLD) {
+            return StockLevelEnum.OUT_OF_STOCK;
+        } else if (totalAmount <= LOW_STOCK_THRESHOLD) {
+            return StockLevelEnum.LOW_STOCK;
+        } else return StockLevelEnum.ENOUGH_STOCK;
+    }
+
+    @Override
+    public boolean isStockAvailable(String productBarcode, int requiredAmount) {
+        List<Stock> foundStocks = _stockRepo.getAllByProductId(productBarcode);
+        int totalAmount = foundStocks.stream().mapToInt(Stock::getQuantity).sum();
+        return totalAmount >= requiredAmount;
     }
 }
