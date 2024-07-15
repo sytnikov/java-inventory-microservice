@@ -2,10 +2,10 @@ package sytnikov.dev.inventory_microservice.domain.stock;
 
 import jakarta.persistence.*;
 import lombok.*;
-import sytnikov.dev.inventory_microservice.domain.orderItem.OrderItem;
+import org.springframework.format.annotation.DateTimeFormat;
 import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -22,10 +22,14 @@ public class Stock {
     @Column(nullable = false, columnDefinition = "VARCHAR(100)", unique = true)
     private String productBarcode;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "NUMERIC")
     private int quantity;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "supplier_id", nullable = false)
+    @ManyToOne
+    @JoinColumn
     private Supplier supplier;
+
+    @DateTimeFormat
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

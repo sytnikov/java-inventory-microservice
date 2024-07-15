@@ -1,5 +1,6 @@
 package sytnikov.dev.inventory_microservice.presentation;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,9 @@ import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierCre
 import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierReadDto;
 import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierUpdateDto;
 import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
+import sytnikov.dev.inventory_microservice.presentation.shared.SuccessResponseEntity;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,9 +25,17 @@ public class SupplierController {
     private ISupplierService _supplierService;
 
     @PostMapping
-    public ResponseEntity<SupplierReadDto> addSupplier(@RequestBody SupplierCreateDto supplierDetails) {
+    public ResponseEntity<SuccessResponseEntity<SupplierReadDto>> addSupplier(@RequestBody @Valid SupplierCreateDto supplierDetails) {
         SupplierReadDto addedSupplier = _supplierService.addSupplier(supplierDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedSupplier);
+
+        // Create a SuccessResponseEntity object
+        SuccessResponseEntity<SupplierReadDto> response = SuccessResponseEntity.<SupplierReadDto>builder()
+                .data(Collections.singletonList(addedSupplier))
+                .errors(null) // No errors
+                .build();
+
+        // Return the response entity with the SuccessResponseEntity
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping

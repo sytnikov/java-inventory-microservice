@@ -6,7 +6,6 @@ import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierRea
 import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierUpdateDto;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
