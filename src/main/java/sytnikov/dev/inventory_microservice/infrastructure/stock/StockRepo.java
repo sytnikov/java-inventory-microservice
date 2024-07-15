@@ -42,8 +42,8 @@ public class StockRepo implements IStockRepo {
     }
 
     @Override
-    public List<Stock> getAllByProductId(String productBarcode) {
-        return _stockJpaRepo.findStocksByProductBarcode(productBarcode);
+    public Stock getOneByProductBarcode(String productBarcode) {
+        return _stockJpaRepo.findStockByProductBarcode(productBarcode);
     }
 
     @Override

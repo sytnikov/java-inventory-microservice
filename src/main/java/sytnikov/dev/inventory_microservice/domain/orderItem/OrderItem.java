@@ -6,6 +6,7 @@ import sytnikov.dev.inventory_microservice.domain.order.Order;
 import sytnikov.dev.inventory_microservice.domain.stock.Stock;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -22,10 +23,6 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_id", nullable = false)
-    private Stock stock;
 
     @Column(nullable = false)
     private int quantity;

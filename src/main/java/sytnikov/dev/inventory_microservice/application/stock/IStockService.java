@@ -16,7 +16,7 @@ public interface IStockService {
     public Optional<Stock> getStockById(UUID stockId);
     public Stock modifyStock(Stock stock);
     public void deleteStock(UUID stockId);
-    public List<Stock> getStocksByProductId(String productBarcode);
+    public Stock getStockByProductBarcode(String productBarcode);
     public List<Stock> getStocksBySupplierId(UUID supplierId);
     public StockLevelEnum getStockLevel(String productBarcode);
     public boolean isStockAvailable (String productBarcode, int requiredAmount);

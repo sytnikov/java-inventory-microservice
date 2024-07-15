@@ -28,10 +28,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatusEnum status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Transient
     private List<OrderItem> orderItems;
 }

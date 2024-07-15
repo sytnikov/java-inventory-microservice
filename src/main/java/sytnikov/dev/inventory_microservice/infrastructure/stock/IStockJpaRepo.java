@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface IStockJpaRepo extends JpaRepository<Stock, UUID> {
     List<Stock> findStocksBySupplierId(UUID supplierId);
-    List<Stock> findStocksByProductBarcode(String productBarcode);
+    Stock findStockByProductBarcode(String productBarcode);
 }

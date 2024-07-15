@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sytnikov.dev.inventory_microservice.application.supplier.ISupplierService;
+import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierCreateDto;
+import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierReadDto;
+import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierUpdateDto;
 import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
 import java.util.List;
@@ -19,32 +22,26 @@ public class SupplierController {
     private ISupplierService _supplierService;
 
     @PostMapping
-    public ResponseEntity<Supplier> addSupplier(@RequestBody Supplier supplierDetails) {
-        Supplier createdSupplier = _supplierService.addSupplier(supplierDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdSupplier);
+    public ResponseEntity<SupplierReadDto> addSupplier(@RequestBody SupplierCreateDto supplierDetails) {
+        SupplierReadDto addedSupplier = _supplierService.addSupplier(supplierDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedSupplier);
     }
 
     @GetMapping
-    public ResponseEntity<List<Supplier>> getAllSuppliers() {
-        List<Supplier> suppliers = _supplierService.getAllSuppliers();
+    public ResponseEntity<List<SupplierReadDto>> getAllSuppliers() {
+        List<SupplierReadDto> suppliers = _supplierService.getAllSuppliers();
         return ResponseEntity.ok(suppliers);
     }
 
     @GetMapping("/{supplierId}")
-    public ResponseEntity<Optional<Supplier>> getSupplierById(@PathVariable UUID supplierId) {
-        Optional<Supplier> foundSupplier = _supplierService.getSupplierById(supplierId);
+    public ResponseEntity<SupplierReadDto> getSupplierById(@PathVariable UUID supplierId) {
+        SupplierReadDto foundSupplier = _supplierService.getSupplierById(supplierId);
         return ResponseEntity.ok(foundSupplier);
     }
 
     @PutMapping("/{supplierId}")
-    public ResponseEntity<Supplier> modifySupplier(@PathVariable UUID supplierId, @RequestBody Supplier supplierDetails) {
-        Optional<Supplier> existingSupplier = _supplierService.getSupplierById(supplierId);
-
-        if (existingSupplier.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        supplierDetails.setId(supplierId);
-        Supplier updatedSupplier = _supplierService.modifySupplier(supplierDetails);
+    public ResponseEntity<SupplierReadDto> modifySupplier(@PathVariable UUID supplierId, @RequestBody SupplierUpdateDto supplierDetails) {
+        SupplierReadDto updatedSupplier = _supplierService.modifySupplier(supplierId, supplierDetails);
         return ResponseEntity.ok(updatedSupplier);
     }
 

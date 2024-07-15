@@ -3,12 +3,16 @@ package sytnikov.dev.inventory_microservice.application.supplier;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierCreateDto;
+import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierReadDto;
+import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierUpdateDto;
 import sytnikov.dev.inventory_microservice.domain.supplier.ISupplierRepo;
 import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SupplierService implements ISupplierService{
@@ -16,26 +20,40 @@ public class SupplierService implements ISupplierService{
     @Autowired
     private ISupplierRepo _supplierRepo;
 
+    @Autowired
+    private SupplierMapper _supplierMapper;
+
     @Override
-    public Supplier addSupplier(Supplier supplier) {
-        return _supplierRepo.createOne(supplier);
+    public SupplierReadDto addSupplier(SupplierCreateDto supplierDetails) {
+        Supplier supplier = _supplierMapper.createDtoToEntity(supplierDetails);
+        Supplier createdSupplier = _supplierRepo.createOne(supplier);
+        return _supplierMapper.entityToReadDto(createdSupplier);
     }
 
     @Override
-    public List<Supplier> getAllSuppliers() {
-        return _supplierRepo.getAll();
+    public List<SupplierReadDto> getAllSuppliers() {
+        List<Supplier> suppliers = _supplierRepo.getAll();
+        List<SupplierReadDto> suppliersReadDto = suppliers.stream().map(_supplierMapper::entityToReadDto).toList();
+        return suppliersReadDto;
     }
 
     @Override
-    public Optional<Supplier> getSupplierById(UUID supplierId) throws EntityNotFoundException {
+    public SupplierReadDto getSupplierById(UUID supplierId) throws EntityNotFoundException {
         Supplier foundSupplier = _supplierRepo.getOneById(supplierId)
                 .orElseThrow(() -> new EntityNotFoundException("Supplier not found with id " + supplierId));
-        return Optional.ofNullable(foundSupplier);
+        return _supplierMapper.entityToReadDto(foundSupplier);
     }
 
     @Override
-    public Supplier modifySupplier(Supplier supplier) {
-        return _supplierRepo.updateOne(supplier);
+    public SupplierReadDto modifySupplier(UUID supplierId, SupplierUpdateDto supplierDetails) {
+        Supplier foundSupplier = _supplierRepo.getOneById(supplierId)
+                .orElseThrow(() -> new EntityNotFoundException("Supplier not found with id " + supplierId));
+
+        _supplierMapper.entityFromUpdateDto(supplierDetails, foundSupplier);
+
+        Supplier updatedSupplier = _supplierRepo.updateOne(foundSupplier);
+
+        return _supplierMapper.entityToReadDto(updatedSupplier);
     }
 
     @Override
