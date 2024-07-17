@@ -14,6 +14,7 @@ import sytnikov.dev.inventory_microservice.presentation.shared.ErrorResponseEnti
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @ControllerAdvice
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleConstraintViolationException(Exception ex) {
-        System.out.println("This is constraint violation exception triggered");
+//        System.out.println("This is constraint violation exception triggered");
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
@@ -48,14 +49,33 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleEntityNotFoundException(Exception ex) {
-        System.out.println("This is entity not found exception triggered");
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponseEntity> handleEntityNotFoundException(EntityNotFoundException ex) {
+
+        ErrorEntity error = ErrorEntity
+                .builder()
+                .field("Entity not found")
+                .message(ex.getMessage())
+                .build();
+
+        ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
+        errorResponseEntity.setErrors(Collections.singletonList(error));
+
+        return new ResponseEntity<ErrorResponseEntity>(errorResponseEntity, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<String> handleAllException(Exception ex) {
-        return new ResponseEntity<>("Unexpected error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorResponseEntity> handleAllException(Exception ex) {
+
+        ErrorEntity error = ErrorEntity
+                .builder()
+                .field("Internal server error")
+                .message("Unexpected error: " + ex.getMessage())
+                .build();
+
+        ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
+        errorResponseEntity.setErrors(Collections.singletonList(error));
+
+        return new ResponseEntity<ErrorResponseEntity>(errorResponseEntity, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -58,6 +58,8 @@ public class SupplierService implements ISupplierService{
 
     @Override
     public void deleteSupplier(UUID supplierId) {
+        _supplierRepo.getOneById(supplierId)
+                .orElseThrow(() -> new EntityNotFoundException("Supplier not found with id " + supplierId));
         _supplierRepo.deleteOne(supplierId);
     }
 }

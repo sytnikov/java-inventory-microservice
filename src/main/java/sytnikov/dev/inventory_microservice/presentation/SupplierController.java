@@ -28,37 +28,54 @@ public class SupplierController {
     public ResponseEntity<SuccessResponseEntity<SupplierReadDto>> addSupplier(@RequestBody @Valid SupplierCreateDto supplierDetails) {
         SupplierReadDto addedSupplier = _supplierService.addSupplier(supplierDetails);
 
-        // Create a SuccessResponseEntity object
-        SuccessResponseEntity<SupplierReadDto> response = SuccessResponseEntity.<SupplierReadDto>builder()
+        SuccessResponseEntity<SupplierReadDto> response = SuccessResponseEntity
+                .<SupplierReadDto>builder()
                 .data(Collections.singletonList(addedSupplier))
-                .errors(null) // No errors
                 .build();
-
-        // Return the response entity with the SuccessResponseEntity
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<SupplierReadDto>> getAllSuppliers() {
+    public ResponseEntity<SuccessResponseEntity<List<SupplierReadDto>>> getAllSuppliers() {
+
         List<SupplierReadDto> suppliers = _supplierService.getAllSuppliers();
-        return ResponseEntity.ok(suppliers);
+
+        SuccessResponseEntity<List<SupplierReadDto>> response = SuccessResponseEntity.
+                <List<SupplierReadDto>>builder()
+                .data(Collections.singletonList(suppliers))
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{supplierId}")
-    public ResponseEntity<SupplierReadDto> getSupplierById(@PathVariable UUID supplierId) {
+    public ResponseEntity<SuccessResponseEntity<SupplierReadDto>> getSupplierById(@PathVariable UUID supplierId) {
         SupplierReadDto foundSupplier = _supplierService.getSupplierById(supplierId);
-        return ResponseEntity.ok(foundSupplier);
+        SuccessResponseEntity<SupplierReadDto> response = SuccessResponseEntity
+                .<SupplierReadDto>builder()
+                .data(Collections.singletonList(foundSupplier))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{supplierId}")
-    public ResponseEntity<SupplierReadDto> modifySupplier(@PathVariable UUID supplierId, @RequestBody SupplierUpdateDto supplierDetails) {
+    public ResponseEntity<SuccessResponseEntity<SupplierReadDto>> modifySupplier(@PathVariable UUID supplierId, @RequestBody @Valid SupplierUpdateDto supplierDetails) {
         SupplierReadDto updatedSupplier = _supplierService.modifySupplier(supplierId, supplierDetails);
-        return ResponseEntity.ok(updatedSupplier);
+        SuccessResponseEntity<SupplierReadDto> response = SuccessResponseEntity
+                .<SupplierReadDto>builder()
+                .data(Collections.singletonList(updatedSupplier))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{supplierId}")
-    public ResponseEntity<Void> deleteSupplier(@PathVariable UUID supplierId) {
+    public ResponseEntity<SuccessResponseEntity<String>> deleteSupplier(@PathVariable UUID supplierId) {
         _supplierService.deleteSupplier(supplierId);
-        return ResponseEntity.noContent().build();
+        SuccessResponseEntity<String> response = SuccessResponseEntity
+                .<String>builder()
+                .data(Collections.singletonList("Supplier with id " + supplierId + " was successfully deleted"))
+                .build();
+        return ResponseEntity.ok(response);
     }
 }
