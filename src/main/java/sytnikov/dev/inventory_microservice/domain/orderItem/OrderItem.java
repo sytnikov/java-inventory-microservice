@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import sytnikov.dev.inventory_microservice.domain.order.Order;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class OrderItem {
     private int quantity;
 
     @Column(nullable = false)
-    private double unitPrice;
+    private BigDecimal unitPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)

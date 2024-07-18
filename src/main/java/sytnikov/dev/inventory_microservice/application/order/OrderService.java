@@ -1,67 +1,84 @@
-//package sytnikov.dev.inventory_microservice.application.order;
-//
-//import jakarta.transaction.Transactional;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//import sytnikov.dev.inventory_microservice.application.order.dtos.OrderCreateDto;
-//import sytnikov.dev.inventory_microservice.application.orderItem.IOrderItemService;
-//import sytnikov.dev.inventory_microservice.application.stock.IStockService;
-//import sytnikov.dev.inventory_microservice.domain.order.IOrderRepo;
-//import sytnikov.dev.inventory_microservice.domain.order.Order;
-//import sytnikov.dev.inventory_microservice.domain.order.OrderStatusEnum;
-//import sytnikov.dev.inventory_microservice.domain.orderItem.OrderItem;
-//import sytnikov.dev.inventory_microservice.domain.stock.Stock;
-//import sytnikov.dev.inventory_microservice.application.orderItem.OrderItemCreateDTO;
-//
-//import java.math.BigDecimal;
-//import java.util.*;
-//
-//@Service
-//public class OrderService implements IOrderService {
-//
-//    @Autowired
-//    private IOrderRepo _orderRepo;
-//
-//    @Autowired
-//    private IOrderItemService _orderItemService;
-//
-//    @Autowired
-//    private IStockService _stockService;
-//
-//    @Override
-//    @Transactional
-//    public Order addOrder(OrderCreateDto orderDetails) {
-//
-//        if (orderDetails == null || orderDetails.getOrderItems().isEmpty()) {
-//            throw new IllegalArgumentException("There are no order items to be added.");
-//        }
-//        Order newOrder = new Order();
-//        List<OrderItem> orderItems = new ArrayList<>();
-//        BigDecimal totalAmount = BigDecimal.valueOf(0);
-//
-//        newOrder.setId(UUID.randomUUID());
-//        newOrder.setTotalAmount(totalAmount);
-//        newOrder.setStatus(OrderStatusEnum.PENDING);
-//
-//        Order savedOrder = _orderRepo.createOne(newOrder);
-//        for (OrderItemCreateDTO orderItem : orderDetails.getOrderItems()) {
-//            String productBarcode = orderItem.getProductBarcode();
-//            Stock orderItemStock = _stockService.getStockByProductBarcode(productBarcode);
-//            totalAmount = totalAmount.add(orderItem.getUnitPrice());
-//            OrderItem newOrderItem = _orderItemService.addOrderItem(orderItem, savedOrder, orderItemStock);
-//            orderItems.add(newOrderItem);
-//        }
-//
-//        savedOrder.setTotalAmount(totalAmount);
-//        savedOrder.setOrderItems(orderItems);
-//
-//        return _orderRepo.createOne(savedOrder);
-//    }
-//
-//    @Override
-//    public List<Order> getAllOrders() {
-//        return _orderRepo.getAll();
-//    }
+package sytnikov.dev.inventory_microservice.application.order;
+
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import sytnikov.dev.inventory_microservice.application.order.dtos.OrderCreateDto;
+import sytnikov.dev.inventory_microservice.application.order.dtos.OrderItemCreateDto;
+import sytnikov.dev.inventory_microservice.application.order.dtos.OrderItemReadDto;
+import sytnikov.dev.inventory_microservice.application.order.dtos.OrderReadDto;
+import sytnikov.dev.inventory_microservice.application.stock.IStockService;
+import sytnikov.dev.inventory_microservice.domain.order.IOrderRepo;
+import sytnikov.dev.inventory_microservice.domain.order.Order;
+import sytnikov.dev.inventory_microservice.domain.order.OrderStatusEnum;
+import sytnikov.dev.inventory_microservice.domain.orderItem.IOrderItemRepo;
+import sytnikov.dev.inventory_microservice.domain.orderItem.OrderItem;
+import sytnikov.dev.inventory_microservice.domain.stock.Stock;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Service
+public class OrderService implements IOrderService {
+
+    @Autowired
+    private IOrderRepo _orderRepo;
+
+    @Autowired
+    private IOrderItemRepo _orderItemRepo;
+
+    @Autowired
+    private IStockService _stockService;
+
+    @Autowired
+    private OrderMapper _orderMapper;
+
+    @Autowired
+    private OrderItemMapper _orderItemMapper;
+
+    @Override
+    @Transactional
+    public OrderReadDto addOrder(OrderCreateDto orderDetails) {
+
+        Order newOrder = _orderMapper.createDtoToEntity(orderDetails);
+
+        BigDecimal totalAmount = orderDetails
+                .getOrderItemsCreateDtos()
+                .stream()
+                .map(orderItem -> BigDecimal.valueOf(orderItem.getUnitPrice())
+                        .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_EVEN);
+
+        newOrder.setTotalAmount(totalAmount);
+
+        Order addedOrder = _orderRepo.createOne(newOrder);
+
+        List<OrderItem> orderItems = orderDetails.getOrderItemsCreateDtos().stream().map(item -> {
+            OrderItem orderItem = _orderItemMapper.createDtoToEntity(item);
+            orderItem.setOrder(addedOrder);
+            return orderItem;
+        }).toList();
+        for (OrderItem orderItem : orderItems) {
+            _orderItemRepo.createOne(orderItem);
+        }
+
+        OrderReadDto orderReadDto = _orderMapper.entityToReadDto(addedOrder);
+
+        List<OrderItemReadDto> orderItemsReadDtos = _orderItemMapper.entitiesToReadDtos(orderItems);
+
+        orderReadDto.setOrderItemsReadDtos(orderItemsReadDtos);
+
+        return orderReadDto;
+    }
+
+    @Override
+    public List<OrderReadDto> getAllOrders() {
+        List<Order> orders = _orderRepo.getAll();
+        return orders.stream().map(_orderMapper::entityToReadDto).toList();
+    }
 //
 //    @Override
 //    public Optional<Order> getOrderById(UUID orderId) {
@@ -77,4 +94,4 @@
 //    public void deleteOrder(UUID orderId) {
 //        _orderRepo.deleteOne(orderId);
 //    }
-//}
+}

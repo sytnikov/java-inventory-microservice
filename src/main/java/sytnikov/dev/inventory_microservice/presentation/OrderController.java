@@ -1,36 +1,38 @@
-//package sytnikov.dev.inventory_microservice.presentation;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//import sytnikov.dev.inventory_microservice.application.order.IOrderService;
-//import sytnikov.dev.inventory_microservice.domain.order.Order;
-//import sytnikov.dev.inventory_microservice.application.order.dtos.OrderCreateDto;
-//
-//import java.util.List;
-//import java.util.Optional;
-//import java.util.UUID;
-//
-//@RestController
-//@RequestMapping("api/v1/orders")
-//public class OrderController {
-//
-//    @Autowired
-//    private IOrderService _orderService;
-//
-//    @PostMapping
-//    public ResponseEntity<Order> addOrder(@RequestBody OrderCreateDto orderDetails) {
-//        Order createdOrder = _orderService.addOrder(orderDetails);
-//        return ResponseEntity.status(HttpStatus.CREATED).build();
-//    }
-//
-//    @GetMapping
-//    public ResponseEntity<List<Order>> getAllOrders() {
-//        List<Order> orders = _orderService.getAllOrders();
-//        return ResponseEntity.ok(orders);
-//    }
-//
+package sytnikov.dev.inventory_microservice.presentation;
+
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import sytnikov.dev.inventory_microservice.application.order.IOrderService;
+import sytnikov.dev.inventory_microservice.application.order.dtos.OrderReadDto;
+import sytnikov.dev.inventory_microservice.domain.order.Order;
+import sytnikov.dev.inventory_microservice.application.order.dtos.OrderCreateDto;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("api/v1/orders")
+public class OrderController {
+
+    @Autowired
+    private IOrderService _orderService;
+
+    @PostMapping
+    public ResponseEntity<OrderReadDto> addOrder(@RequestBody @Valid OrderCreateDto orderDetails) {
+        OrderReadDto createdOrder = _orderService.addOrder(orderDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderReadDto>> getAllOrders() {
+        List<OrderReadDto> orders = _orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
 //    @GetMapping("/{orderId}")
 //    public ResponseEntity<Optional<Order>> getOrderById(@PathVariable UUID orderId) {
 //        Optional<Order> foundOrder = _orderService.getOrderById(orderId);
@@ -54,9 +56,9 @@
 //        _orderService.deleteOrder(orderId);
 //        return ResponseEntity.noContent().build();
 //    }
-//}
-//
-//
-//
-//
-//
+}
+
+
+
+
+

@@ -1,25 +1,21 @@
 package sytnikov.dev.inventory_microservice.application.stock;
 
 import javax.annotation.processing.Generated;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sytnikov.dev.inventory_microservice.application.stock.dtos.StockCreateDto;
 import sytnikov.dev.inventory_microservice.application.stock.dtos.StockReadDto;
 import sytnikov.dev.inventory_microservice.application.stock.dtos.StockUpdateDto;
-import sytnikov.dev.inventory_microservice.application.supplier.SupplierMapper;
+import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierReadDto;
 import sytnikov.dev.inventory_microservice.domain.stock.Stock;
 import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-18T14:04:24+0300",
+    date = "2024-07-18T18:33:00+0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.1 (Oracle Corporation)"
 )
 @Component
 public class StockMapperImpl implements StockMapper {
-
-    @Autowired
-    private SupplierMapper supplierMapper;
 
     @Override
     public Stock createDtoToEntity(StockCreateDto newStockDetails) {
@@ -44,7 +40,7 @@ public class StockMapperImpl implements StockMapper {
 
         StockReadDto stockReadDto = new StockReadDto();
 
-        stockReadDto.setSupplierReadDto( supplierMapper.entityToReadDto( stock.getSupplier() ) );
+        stockReadDto.setSupplierReadDto( supplierToSupplierReadDto( stock.getSupplier() ) );
         stockReadDto.setId( stock.getId() );
         stockReadDto.setProductBarcode( stock.getProductBarcode() );
         stockReadDto.setQuantity( stock.getQuantity() );
@@ -77,6 +73,22 @@ public class StockMapperImpl implements StockMapper {
         supplier.setId( stockCreateDto.getSupplierId() );
 
         return supplier;
+    }
+
+    protected SupplierReadDto supplierToSupplierReadDto(Supplier supplier) {
+        if ( supplier == null ) {
+            return null;
+        }
+
+        SupplierReadDto supplierReadDto = new SupplierReadDto();
+
+        supplierReadDto.setId( supplier.getId() );
+        supplierReadDto.setName( supplier.getName() );
+        supplierReadDto.setContactPerson( supplier.getContactPerson() );
+        supplierReadDto.setEmail( supplier.getEmail() );
+        supplierReadDto.setCreatedAt( supplier.getCreatedAt() );
+
+        return supplierReadDto;
     }
 
     protected void stockUpdateDtoToSupplier(StockUpdateDto stockUpdateDto, Supplier mappingTarget) {

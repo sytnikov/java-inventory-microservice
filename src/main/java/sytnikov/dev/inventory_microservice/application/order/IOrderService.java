@@ -1,6 +1,7 @@
 package sytnikov.dev.inventory_microservice.application.order;
 
 import sytnikov.dev.inventory_microservice.application.order.dtos.OrderCreateDto;
+import sytnikov.dev.inventory_microservice.application.order.dtos.OrderReadDto;
 import sytnikov.dev.inventory_microservice.domain.order.Order;
 
 import java.util.List;
@@ -8,9 +9,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IOrderService {
-    public Order addOrder(OrderCreateDto orderDetails);
-    public List<Order> getAllOrders();
-    public Optional<Order> getOrderById(UUID orderId);
-    public Order modifyOrder(Order order);
-    public void deleteOrder(UUID orderId);
+    OrderReadDto addOrder(OrderCreateDto orderDetails);
+    List<OrderReadDto> getAllOrders();
+//    Optional<Order> getOrderById(UUID orderId);
+//    Order modifyOrder(Order order);
+//    void deleteOrder(UUID orderId);
 }

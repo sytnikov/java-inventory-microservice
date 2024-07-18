@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import sytnikov.dev.inventory_microservice.domain.orderItem.OrderItem;
 import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class Order {
     private UUID id;
 
     @Column(nullable = false)
-    private double totalAmount;
+    private BigDecimal totalAmount;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

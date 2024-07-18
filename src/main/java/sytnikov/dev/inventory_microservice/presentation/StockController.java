@@ -79,7 +79,7 @@ public class StockController {
     }
 
     @GetMapping("/level/{productBarcode}")
-    public ResponseEntity<StockLevelEnum> isStockAvailable(@PathVariable String productBarcode) {
+    public ResponseEntity<StockLevelEnum> checkStockLevel(@PathVariable String productBarcode) {
         StockLevelEnum stockLevel = _stockService.getStockLevel(productBarcode);
         return ResponseEntity.ok(stockLevel);
     }

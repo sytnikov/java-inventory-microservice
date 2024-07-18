@@ -96,6 +96,9 @@ public class StockService implements IStockService{
     @Override
     public StockLevelEnum getStockLevel(String productBarcode) {
         Stock foundStock = _stockRepo.getOneByProductBarcode(productBarcode);
+        if (foundStock == null) {
+            throw new EntityNotFoundException("Product with the barcode " + productBarcode + " not found");
+        }
         int totalAmount = foundStock.getQuantity();
         if (totalAmount == OUT_OF_STOCK_THRESHOLD) {
             return StockLevelEnum.OUT_OF_STOCK;
@@ -107,6 +110,9 @@ public class StockService implements IStockService{
     @Override
     public boolean isStockAvailable(String productBarcode, int requiredAmount) {
         Stock foundStock = _stockRepo.getOneByProductBarcode(productBarcode);
+        if (foundStock == null) {
+            throw new EntityNotFoundException("Product with the barcode " + productBarcode + " not found");
+        }
         int totalAmount = foundStock.getQuantity();
         return totalAmount >= requiredAmount;
     }
