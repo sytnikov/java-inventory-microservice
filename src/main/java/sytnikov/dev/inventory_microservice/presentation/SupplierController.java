@@ -27,25 +27,20 @@ public class SupplierController {
     @PostMapping
     public ResponseEntity<SuccessResponseEntity<SupplierReadDto>> addSupplier(@RequestBody @Valid SupplierCreateDto supplierDetails) {
         SupplierReadDto addedSupplier = _supplierService.addSupplier(supplierDetails);
-
         SuccessResponseEntity<SupplierReadDto> response = SuccessResponseEntity
                 .<SupplierReadDto>builder()
                 .data(Collections.singletonList(addedSupplier))
                 .build();
-        
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
     public ResponseEntity<SuccessResponseEntity<List<SupplierReadDto>>> getAllSuppliers() {
-
         List<SupplierReadDto> suppliers = _supplierService.getAllSuppliers();
-
         SuccessResponseEntity<List<SupplierReadDto>> response = SuccessResponseEntity.
                 <List<SupplierReadDto>>builder()
                 .data(Collections.singletonList(suppliers))
                 .build();
-
         return ResponseEntity.ok(response);
     }
 

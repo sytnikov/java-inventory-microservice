@@ -1,9 +1,10 @@
 package sytnikov.dev.inventory_microservice.application.stock;
 
 import org.springframework.stereotype.Service;
-import sytnikov.dev.inventory_microservice.domain.stock.Stock;
+import sytnikov.dev.inventory_microservice.application.stock.dtos.StockCreateDto;
+import sytnikov.dev.inventory_microservice.application.stock.dtos.StockReadDto;
+import sytnikov.dev.inventory_microservice.application.stock.dtos.StockUpdateDto;
 import sytnikov.dev.inventory_microservice.domain.stock.StockLevelEnum;
-import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,13 +12,13 @@ import java.util.UUID;
 
 @Service
 public interface IStockService {
-    public Stock addStock(Supplier supplier, String productBarcode, int quantity);
-    public List<Stock> getAllStocks();
-    public Optional<Stock> getStockById(UUID stockId);
-    public Stock modifyStock(Stock stock);
-    public void deleteStock(UUID stockId);
-    public Stock getStockByProductBarcode(String productBarcode);
-    public List<Stock> getStocksBySupplierId(UUID supplierId);
-    public StockLevelEnum getStockLevel(String productBarcode);
-    public boolean isStockAvailable (String productBarcode, int requiredAmount);
+    StockReadDto addStock(StockCreateDto stockDetails);
+    List<StockReadDto> getAllStocks();
+    StockReadDto getStockById(UUID stockId);
+    StockReadDto modifyStock(UUID stockId, StockUpdateDto stockDetails);
+    void deleteStock(UUID stockId);
+    StockReadDto getStockByProductBarcode(String productBarcode);
+    List<StockReadDto> getStocksBySupplierId(UUID supplierId);
+    StockLevelEnum getStockLevel(String productBarcode);
+    boolean isStockAvailable (String productBarcode, int requiredAmount);
 }

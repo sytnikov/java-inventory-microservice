@@ -13,6 +13,7 @@ public class SupplierCreateDto {
     private String name;
 
     @NotNull
+    @Size(min = 3, message = "should be longer than 3 characters")
     private String contactPerson;
 
     @Email

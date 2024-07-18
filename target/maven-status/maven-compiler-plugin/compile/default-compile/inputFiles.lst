@@ -6,8 +6,11 @@
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/orderItem/OrderItemCreateDTO.java
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/orderItem/OrderItemService.java
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/stock/IStockService.java
-/Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/stock/StockCreateDto.java
+/Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/stock/StockMapper.java
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/stock/StockService.java
+/Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/stock/dtos/StockCreateDto.java
+/Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/stock/dtos/StockReadDto.java
+/Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/stock/dtos/StockUpdateDto.java
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/supplier/ISupplierService.java
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/supplier/SupplierMapper.java
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/application/supplier/SupplierService.java
@@ -37,3 +40,6 @@
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/presentation/StockController.java
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/presentation/SupplierController.java
 /Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/presentation/error_handlers/GlobalExceptionHandler.java
+/Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/presentation/shared/ErrorEntity.java
+/Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/presentation/shared/ErrorResponseEntity.java
+/Users/sytnikov/Documents/dev/fs17_java_inventory_service/src/main/java/sytnikov/dev/inventory_microservice/presentation/shared/SuccessResponseEntity.java
