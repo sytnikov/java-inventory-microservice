@@ -4,10 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sytnikov.dev.inventory_microservice.application.order.dtos.OrderCreateDto;
-import sytnikov.dev.inventory_microservice.application.order.dtos.OrderItemCreateDto;
-import sytnikov.dev.inventory_microservice.application.order.dtos.OrderItemReadDto;
-import sytnikov.dev.inventory_microservice.application.order.dtos.OrderReadDto;
+import sytnikov.dev.inventory_microservice.application.order.dtos.*;
 import sytnikov.dev.inventory_microservice.application.stock.IStockService;
 import sytnikov.dev.inventory_microservice.application.stock.dtos.StockReadDto;
 import sytnikov.dev.inventory_microservice.application.supplier.ISupplierService;
@@ -130,19 +127,27 @@ public class OrderService implements IOrderService {
         List<Order> orders = _orderRepo.getAll();
         return orders.stream().map(_orderMapper::entityToReadDto).toList();
     }
-//
-//    @Override
-//    public Optional<Order> getOrderById(UUID orderId) {
-//        return _orderRepo.getOneById(orderId);
-//    }
-//
-//    @Override
-//    public Order modifyOrder(Order order) {
-//        return _orderRepo.updateOne(order);
-//    }
-//
-//    @Override
-//    public void deleteOrder(UUID orderId) {
-//        _orderRepo.deleteOne(orderId);
-//    }
+
+    @Override
+    public OrderReadDto getOrderById(UUID orderId) {
+        Order foundOrder = _orderRepo.getOneById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id " + orderId));
+        return _orderMapper.entityToReadDto(foundOrder);
+    }
+
+    @Override
+    public OrderReadDto modifyOrder(UUID orderId, OrderUpdateDto orderDetails) {
+        Order foundOrder = _orderRepo.getOneById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id " + orderId));
+        _orderMapper.updateEntityFromDto(orderDetails, foundOrder);
+        Order updatedOrder = _orderRepo.updateOne(foundOrder);
+        return _orderMapper.entityToReadDto(updatedOrder);
+    }
+
+    @Override
+    public void deleteOrder(UUID orderId) {
+        _orderRepo.getOneById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id " + orderId));
+        _orderRepo.deleteOne(orderId);
+    }
 }
