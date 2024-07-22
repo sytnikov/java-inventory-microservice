@@ -11,7 +11,7 @@ import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-18T18:33:00+0300",
+    date = "2024-07-22T13:57:33+0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.1 (Oracle Corporation)"
 )
 @Component
@@ -50,15 +50,11 @@ public class StockMapperImpl implements StockMapper {
     }
 
     @Override
-    public void entityFromUpdateDto(StockUpdateDto updatingStockDetails, Stock stock) {
+    public void updateEntityFromDto(StockUpdateDto updatingStockDetails, Stock stock) {
         if ( updatingStockDetails == null ) {
             return;
         }
 
-        if ( stock.getSupplier() == null ) {
-            stock.setSupplier( new Supplier() );
-        }
-        stockUpdateDtoToSupplier( updatingStockDetails, stock.getSupplier() );
         stock.setProductBarcode( updatingStockDetails.getProductBarcode() );
         stock.setQuantity( updatingStockDetails.getQuantity() );
     }
@@ -89,13 +85,5 @@ public class StockMapperImpl implements StockMapper {
         supplierReadDto.setCreatedAt( supplier.getCreatedAt() );
 
         return supplierReadDto;
-    }
-
-    protected void stockUpdateDtoToSupplier(StockUpdateDto stockUpdateDto, Supplier mappingTarget) {
-        if ( stockUpdateDto == null ) {
-            return;
-        }
-
-        mappingTarget.setId( stockUpdateDto.getSupplierId() );
     }
 }

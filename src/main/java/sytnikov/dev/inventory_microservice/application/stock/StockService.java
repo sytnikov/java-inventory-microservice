@@ -8,7 +8,6 @@ import sytnikov.dev.inventory_microservice.application.stock.dtos.StockCreateDto
 import sytnikov.dev.inventory_microservice.application.stock.dtos.StockReadDto;
 import sytnikov.dev.inventory_microservice.application.stock.dtos.StockUpdateDto;
 import sytnikov.dev.inventory_microservice.application.supplier.ISupplierService;
-import sytnikov.dev.inventory_microservice.application.supplier.dtos.SupplierReadDto;
 import sytnikov.dev.inventory_microservice.domain.stock.IStockRepo;
 import sytnikov.dev.inventory_microservice.domain.stock.Stock;
 import sytnikov.dev.inventory_microservice.domain.stock.StockLevelEnum;
@@ -61,12 +60,21 @@ public class StockService implements IStockService{
         return _stockMapper.entityToReadDto(foundStock);
     }
 
+    @Transactional
     @Override
     public StockReadDto modifyStock(UUID stockId, StockUpdateDto stockDetails) {
         Stock foundStock = _stockRepo.getOneById(stockId)
                 .orElseThrow(() -> new EntityNotFoundException("Stock not found with id " + stockId));
-        _stockMapper.entityFromUpdateDto(stockDetails, foundStock);
+
+        // mapping productBarcode and quantity
+        _stockMapper.updateEntityFromDto(stockDetails, foundStock);
+
+        // explicitly setting supplier
+        Supplier foundSupplier = _supplierRepo.getOneById(stockDetails.getSupplierId()).orElseThrow();
+        foundStock.setSupplier(foundSupplier);
+
         Stock updatedStock = _stockRepo.updateOne(foundStock);
+
         return _stockMapper.entityToReadDto(updatedStock);
     }
 

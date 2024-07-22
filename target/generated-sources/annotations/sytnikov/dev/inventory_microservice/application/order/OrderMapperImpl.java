@@ -17,7 +17,7 @@ import sytnikov.dev.inventory_microservice.domain.supplier.Supplier;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-18T22:47:41+0300",
+    date = "2024-07-22T13:53:14+0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 22.0.1 (Oracle Corporation)"
 )
 @Component
@@ -57,7 +57,7 @@ public class OrderMapperImpl implements OrderMapper {
     }
 
     @Override
-    public void entityFromUpdateDto(OrderUpdateDto updatingOrderDetails, Order order) {
+    public void updateEntityFromDto(OrderUpdateDto updatingOrderDetails, Order order) {
         if ( updatingOrderDetails == null ) {
             return;
         }

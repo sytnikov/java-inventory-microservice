@@ -19,5 +19,5 @@ public interface OrderMapper {
     @Mapping(source = "orderItemsCreateDtos", target = "orderItems")
     Order createDtoToEntity(OrderCreateDto newOrderDetails);
 
-    void entityFromUpdateDto(OrderUpdateDto updatingOrderDetails, @MappingTarget Order order);
+    void updateEntityFromDto(OrderUpdateDto updatingOrderDetails, @MappingTarget Order order);
 }

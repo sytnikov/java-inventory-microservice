@@ -12,12 +12,15 @@ import sytnikov.dev.inventory_microservice.domain.stock.Stock;
 @Mapper(componentModel = "spring")
 public interface StockMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(source = "supplierId", target = "supplier.id")
     Stock createDtoToEntity(StockCreateDto newStockDetails);
 
     @Mapping(source = "supplier", target = "supplierReadDto")
     StockReadDto entityToReadDto(Stock stock);
 
-    @Mapping(source = "supplierId", target = "supplier.id")
-    void entityFromUpdateDto(StockUpdateDto updatingStockDetails, @MappingTarget Stock stock);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    void updateEntityFromDto(StockUpdateDto updatingStockDetails, @MappingTarget Stock stock);
 }

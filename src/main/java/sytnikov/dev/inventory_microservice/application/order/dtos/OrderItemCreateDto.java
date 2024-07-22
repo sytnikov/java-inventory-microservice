@@ -1,5 +1,6 @@
 package sytnikov.dev.inventory_microservice.application.order.dtos;
 
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

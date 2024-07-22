@@ -25,7 +25,7 @@ public class Stock {
     @Column(nullable = false, columnDefinition = "NUMERIC")
     private int quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(nullable = false)
     private Supplier supplier;
 
