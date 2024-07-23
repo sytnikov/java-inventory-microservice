@@ -5,9 +5,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ISupplierRepo {
-    public Supplier createOne(Supplier supplier);
-    public List<Supplier> getAll();
-    public Optional<Supplier> getOneById(UUID supplierId);
-    public Supplier updateOne(Supplier supplier);
-    public void deleteOne(UUID supplierId);
+    Supplier createOne(Supplier supplier);
+    List<Supplier> getAll();
+    Optional<Supplier> getOneById(UUID supplierId);
+    Supplier updateOne(Supplier supplier);
+    void deleteOne(UUID supplierId);
 }

@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import sytnikov.dev.inventory_microservice.application.order.IOrderService;
 import sytnikov.dev.inventory_microservice.application.order.dtos.OrderReadDto;
 import sytnikov.dev.inventory_microservice.application.order.dtos.OrderUpdateDto;
+import sytnikov.dev.inventory_microservice.application.stock.dtos.StockReadDto;
 import sytnikov.dev.inventory_microservice.domain.order.Order;
 import sytnikov.dev.inventory_microservice.application.order.dtos.OrderCreateDto;
+import sytnikov.dev.inventory_microservice.presentation.shared.SuccessResponseEntity;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,33 +26,63 @@ public class OrderController {
     private IOrderService _orderService;
 
     @PostMapping
-    public ResponseEntity<OrderReadDto> addOrder(@RequestBody @Valid OrderCreateDto orderDetails) {
-        OrderReadDto createdOrder = _orderService.addOrder(orderDetails);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+    public ResponseEntity<SuccessResponseEntity<OrderReadDto>> addOrder(@RequestBody @Valid OrderCreateDto orderDetails) {
+        OrderReadDto addedOrder = _orderService.addOrder(orderDetails);
+        SuccessResponseEntity<OrderReadDto> response = SuccessResponseEntity
+                .<OrderReadDto>builder()
+                .data(Collections.singletonList(addedOrder))
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderReadDto>> getAllOrders() {
+    public ResponseEntity<SuccessResponseEntity<List<OrderReadDto>>> getAllOrders() {
         List<OrderReadDto> orders = _orderService.getAllOrders();
-        return ResponseEntity.ok(orders);
+        SuccessResponseEntity<List<OrderReadDto>> response = SuccessResponseEntity
+                .<List<OrderReadDto>>builder()
+                .data(Collections.singletonList(orders))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderReadDto> getOrderById(@PathVariable UUID orderId) {
+    public ResponseEntity<SuccessResponseEntity<OrderReadDto>> getOrderById(@PathVariable UUID orderId) {
         OrderReadDto foundOrder = _orderService.getOrderById(orderId);
-        return ResponseEntity.ok(foundOrder);
+        SuccessResponseEntity<OrderReadDto> response = SuccessResponseEntity
+                .<OrderReadDto>builder()
+                .data(Collections.singletonList(foundOrder))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<OrderReadDto> modifyOrder(@PathVariable UUID orderId, @RequestBody @Valid OrderUpdateDto orderDetails) {
+    public ResponseEntity<SuccessResponseEntity<OrderReadDto>> modifyOrder(@PathVariable UUID orderId, @RequestBody @Valid OrderUpdateDto orderDetails) {
         OrderReadDto updatedOrder = _orderService.modifyOrder(orderId, orderDetails);
-        return ResponseEntity.ok(updatedOrder);
+        SuccessResponseEntity<OrderReadDto> response = SuccessResponseEntity
+                .<OrderReadDto>builder()
+                .data(Collections.singletonList(updatedOrder))
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{orderId}/cancel")
+    public ResponseEntity<SuccessResponseEntity<OrderReadDto>> cancelOrder(@PathVariable UUID orderId) {
+        OrderReadDto cancelledOrder = _orderService.cancelOrder(orderId);
+        SuccessResponseEntity<OrderReadDto> response = SuccessResponseEntity
+                .<OrderReadDto>builder()
+                .data(Collections.singletonList(cancelledOrder))
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable UUID orderId) {
+    public ResponseEntity<SuccessResponseEntity<String>> deleteOrder(@PathVariable UUID orderId) {
         _orderService.deleteOrder(orderId);
-        return ResponseEntity.noContent().build();
+        SuccessResponseEntity<String> response = SuccessResponseEntity
+                .<String>builder()
+                .data(Collections.singletonList("Order with id " + orderId + " was successfully deleted"))
+                .build();
+        return ResponseEntity.ok(response);
     }
 }
 

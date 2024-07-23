@@ -5,11 +5,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IStockRepo {
-    public Stock createOne(Stock stock);
-    public List<Stock> getAll();
-    public Optional<Stock> getOneById(UUID stockId);
-    public Stock updateOne(Stock stock);
-    public void deleteOne(UUID stockId);
-    public Stock getOneByProductBarcode(String productBarcode);
-    public List<Stock> getAllBySupplierId(UUID supplierId);
+    Stock createOne(Stock stock);
+    List<Stock> getAll();
+    Optional<Stock> getOneById(UUID stockId);
+    Stock updateOne(Stock stock);
+    void deleteOne(UUID stockId);
+    Stock getOneByProductBarcode(String productBarcode);
+    List<Stock> getAllBySupplierId(UUID supplierId);
 }

@@ -31,6 +31,11 @@ public class OrderItemRepo implements IOrderItemRepo {
     }
 
     @Override
+    public List<OrderItem> getAllByOrderId(UUID orderId) {
+        return _orderItemJpaRepo.findOrderItemsByOrderId(orderId);
+    }
+
+    @Override
     public OrderItem updateOne(OrderItem orderItem) {
         return _orderItemJpaRepo.save(orderItem);
     }

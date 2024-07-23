@@ -14,7 +14,7 @@ public interface StockMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(source = "supplierId", target = "supplier.id")
+    @Mapping(target = "supplier.id", source = "supplierId")
     Stock createDtoToEntity(StockCreateDto newStockDetails);
 
     @Mapping(source = "supplier", target = "supplierReadDto")
@@ -22,5 +22,6 @@ public interface StockMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
+//    @Mapping(target = "supplier.id", source = "supplierId")
     void updateEntityFromDto(StockUpdateDto updatingStockDetails, @MappingTarget Stock stock);
 }

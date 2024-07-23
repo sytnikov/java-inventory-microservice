@@ -56,6 +56,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ErrorResponseEntity>(errorResponseEntity, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponseEntity> handleIllegalStateException(IllegalStateException ex) {
+
+        ErrorEntity error = ErrorEntity
+                .builder()
+                .field("Illegal state change request")
+                .message(ex.getMessage())
+                .build();
+
+        ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
+        errorResponseEntity.setErrors(Collections.singletonList(error));
+
+        return new ResponseEntity<ErrorResponseEntity>(errorResponseEntity, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponseEntity> handleAllException(Exception ex) {

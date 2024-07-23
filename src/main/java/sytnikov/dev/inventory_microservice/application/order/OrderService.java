@@ -109,6 +109,7 @@ public class OrderService implements IOrderService {
         List<OrderItem> orderItems = orderDetails.getOrderItemsCreateDtos().stream().map(item -> {
             OrderItem orderItem = _orderItemMapper.createDtoToEntity(item);
             orderItem.setOrder(addedOrder);
+            System.out.println(orderItem);
             return orderItem;
         }).toList();
         for (OrderItem orderItem : orderItems) {
@@ -139,15 +140,45 @@ public class OrderService implements IOrderService {
     public OrderReadDto modifyOrder(UUID orderId, OrderUpdateDto orderDetails) {
         Order foundOrder = _orderRepo.getOneById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found with id " + orderId));
+
+        if (foundOrder.getStatus() == OrderStatusEnum.CANCELLED) {
+            throw new IllegalStateException("Cannot modify order once it is cancelled");
+        }
+
         _orderMapper.updateEntityFromDto(orderDetails, foundOrder);
         Order updatedOrder = _orderRepo.updateOne(foundOrder);
+
         return _orderMapper.entityToReadDto(updatedOrder);
     }
 
     @Override
+    @Transactional
+    public OrderReadDto cancelOrder(UUID orderId) {
+        Order foundOrder = _orderRepo.getOneById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id " + orderId));
+
+        // populating stocks back and deleting orderItems
+        List<OrderItem> foundOrderItems = _orderItemRepo.getAllByOrderId(foundOrder.getId());
+        for (OrderItem item : foundOrderItems) {
+            Stock foundStock = _stockRepo.getOneByProductBarcode(item.getProductBarcode());
+            foundStock.setQuantity(foundStock.getQuantity() + item.getQuantity());
+            _orderItemRepo.deleteOne(item.getId());
+        }
+
+        foundOrder.setStatus(OrderStatusEnum.CANCELLED);
+
+        return _orderMapper.entityToReadDto(foundOrder);
+    }
+
+    @Override
+    @Transactional
     public void deleteOrder(UUID orderId) {
         _orderRepo.getOneById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found with id " + orderId));
+        List<OrderItem> orderItems = _orderItemRepo.getAllByOrderId(orderId);
+        for (OrderItem item : orderItems) {
+            _orderItemRepo.deleteOne(item.getId());
+        }
         _orderRepo.deleteOne(orderId);
     }
 }

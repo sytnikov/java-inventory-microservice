@@ -5,9 +5,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IOrderItemRepo {
-    public OrderItem createOne(OrderItem orderItem);
-    public List<OrderItem> getAll();
-    public Optional<OrderItem> getOneById(UUID orderItemId);
-    public OrderItem updateOne(OrderItem orderItem);
-    public void deleteOne(UUID orderItem_id);
+    OrderItem createOne(OrderItem orderItem);
+    List<OrderItem> getAll();
+    Optional<OrderItem> getOneById(UUID orderItemId);
+    List<OrderItem> getAllByOrderId(UUID orderId);
+    OrderItem updateOne(OrderItem orderItem);
+    void deleteOne(UUID orderItem_id);
 }

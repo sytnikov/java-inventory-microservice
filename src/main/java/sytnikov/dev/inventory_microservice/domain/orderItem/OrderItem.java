@@ -30,7 +30,7 @@ public class OrderItem {
     private BigDecimal unitPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @DateTimeFormat
