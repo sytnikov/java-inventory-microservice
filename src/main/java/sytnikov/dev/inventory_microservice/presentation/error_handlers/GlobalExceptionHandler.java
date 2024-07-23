@@ -1,7 +1,7 @@
 package sytnikov.dev.inventory_microservice.presentation.error_handlers;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -9,16 +9,18 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import sytnikov.dev.inventory_microservice.presentation.loggers.LoggerUtil;
 import sytnikov.dev.inventory_microservice.presentation.shared.ErrorEntity;
 import sytnikov.dev.inventory_microservice.presentation.shared.ErrorResponseEntity;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger _logger = LoggerUtil.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -37,6 +39,8 @@ public class GlobalExceptionHandler {
         ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
         errorResponseEntity.setErrors(errors);
 
+        _logger.warn("Validation exception occurred: {}", ex.getMessage());
+
         return new ResponseEntity<ErrorResponseEntity>(errorResponseEntity, HttpStatus.BAD_REQUEST);
     }
 
@@ -52,6 +56,8 @@ public class GlobalExceptionHandler {
 
         ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
         errorResponseEntity.setErrors(Collections.singletonList(error));
+
+        _logger.error("Entity not found exception: {}", ex.getMessage());
 
         return new ResponseEntity<ErrorResponseEntity>(errorResponseEntity, HttpStatus.NOT_FOUND);
     }
@@ -69,6 +75,8 @@ public class GlobalExceptionHandler {
         ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
         errorResponseEntity.setErrors(Collections.singletonList(error));
 
+        _logger.error("Illegal state exception: {}", ex.getMessage());
+
         return new ResponseEntity<ErrorResponseEntity>(errorResponseEntity, HttpStatus.BAD_REQUEST);
     }
 
@@ -84,6 +92,8 @@ public class GlobalExceptionHandler {
 
         ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
         errorResponseEntity.setErrors(Collections.singletonList(error));
+
+        _logger.error("An unexpected error occurred: {}", ex.getMessage());
 
         return new ResponseEntity<ErrorResponseEntity>(errorResponseEntity, HttpStatus.INTERNAL_SERVER_ERROR);
     }

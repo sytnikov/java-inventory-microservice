@@ -109,7 +109,6 @@ public class OrderService implements IOrderService {
         List<OrderItem> orderItems = orderDetails.getOrderItemsCreateDtos().stream().map(item -> {
             OrderItem orderItem = _orderItemMapper.createDtoToEntity(item);
             orderItem.setOrder(addedOrder);
-            System.out.println(orderItem);
             return orderItem;
         }).toList();
         for (OrderItem orderItem : orderItems) {
